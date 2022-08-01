@@ -33,7 +33,7 @@ export const createPost = async (req, res) => {
     const post = req.body;
     const userId = req.userId
     const imgCreateName = req.createImage
-    const hostName = `http://localhost:5000`
+    const hostName = `https://meow-book-server.herokuapp.com/`
     const imgLink = `${hostName}/image/${imgCreateName}`
 
 
@@ -63,7 +63,7 @@ export const createPost = async (req, res) => {
 // edit post 
 export const editPost = async (req, res) => {
     const imgCreateName = req.createImage
-    const hostName = `http://localhost:5000`
+    const hostName = `https://meow-book-server.herokuapp.com/`
     const imgLink = `${hostName}/image/${imgCreateName}`
 
 
