@@ -8,9 +8,11 @@ import {deleteOldImage} from '../middleWare/deleteOldImage'
 const postsRoute = express.Router();
 postsRoute.get('/',getPosts )
 postsRoute.post('/',authMiddleWare ,uploadPost, createPost)
-postsRoute.post('/:_id/addComment',authMiddleWare,addComment)
 postsRoute.patch('/:_id',authMiddleWare,deleteOldImage,uploadPost,editPost)
 postsRoute.delete('/:_id',authMiddleWare,deleteOldImage,deletePost)
+postsRoute.post('/:_id/addComment',authMiddleWare,addComment)
+
+
 postsRoute.patch('/:_id/likePost',authMiddleWare , likePost)
 postsRoute.patch('/:_id/:commentId',authMiddleWare , editComment)
 postsRoute.delete('/:_id/:commentId',authMiddleWare,deleteComment)

@@ -46,4 +46,4 @@ app.get('/', function (req, res) {
 
 
 app.listen(PORT)
-console.log('listening on port :https://meow-book-server.herokuapp.com/')
+console.log('listening on port :http://localhost:5000')

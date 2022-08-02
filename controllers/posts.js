@@ -28,12 +28,14 @@ export const createPost = async (req, res) => {
 
 
     const imgId = req.imgId
-   
+
 
     const post = req.body;
+
     const userId = req.userId
+   
     const imgCreateName = req.createImage
-    const hostName = `https://meow-book-server.herokuapp.com/`
+    const hostName = `http://localhost:5000`
     const imgLink = `${hostName}/image/${imgCreateName}`
 
 
@@ -47,8 +49,9 @@ export const createPost = async (req, res) => {
 
 
 
-    const newPost = new PostMessage({ ...post, authorId: userId, selectedFile: imgLink, imgId: imgId })
     try {
+        const newPost = new PostMessage({ ...post, authorId: userId, selectedFile: imgLink, imgId: imgId })
+
         await newPost.save();
         res.status(201).json(newPost)
     } catch (error) {
@@ -63,7 +66,7 @@ export const createPost = async (req, res) => {
 // edit post 
 export const editPost = async (req, res) => {
     const imgCreateName = req.createImage
-    const hostName = `https://meow-book-server.herokuapp.com/`
+    const hostName = `http://localhost:5000`
     const imgLink = `${hostName}/image/${imgCreateName}`
 
 
@@ -77,7 +80,7 @@ export const editPost = async (req, res) => {
 
 
         const { title, message, authorId, selectedFile, tags, name, authorAvatarUrl } = req.body;
-        if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`);
+        
 
 
 
@@ -91,6 +94,7 @@ export const editPost = async (req, res) => {
 
 
         try {
+            if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`);
 
 
             const updated = await PostMessage.findByIdAndUpdate(_id, updatedPost, { new: true });
@@ -112,9 +116,10 @@ export const editPost = async (req, res) => {
 export const deletePost = async (req, res) => {
     if (req.params._id) {
         const { _id } = req.params
-        if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`);
 
         try {
+        if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`);
+
             // check userId valid to delete post
             const currentPost = await PostMessage.findById(req.params._id)
             const authorId = currentPost.authorId
@@ -156,7 +161,7 @@ export const likePost = async (req, res) => {
 
         }
         const post = await PostMessage.findById(_id)
-      
+
         const index = post.likes.findIndex((id) => id === req.userId)
         if (index === -1) {
             // like the post
@@ -211,7 +216,7 @@ export const addComment = async (req, res) => {
 // patch post/:_id/:commentId
 export const editComment = async (req, res, next) => {
     const { _id, commentId } = req.params
-   
+
     const newCommentData = req.body
 
 
@@ -241,7 +246,7 @@ export const editComment = async (req, res, next) => {
         console.log(commentsArray[indexChange])
         const updatedPost = {
             ...currentPost,
-            comments : commentsArray
+            comments: commentsArray
         }
 
 
@@ -276,19 +281,19 @@ export const deleteComment = async (req, res) => {
 
         }
         const { _id, commentId } = req.params
-        
+
         if (!mongoose.Types.ObjectId.isValid(_id)) {
             res.sendStatus(404)
-            return res.status(404).json('no post with id :' + idOfPost)
+            return res.status(404).json('no post with id :' + _id)
 
         }
         const currentPost = (await PostMessage.findById(_id))._doc
-        
+
         const commentsArray = currentPost.comments
         const newCommentsArray = commentsArray.filter(comment => comment.commentId !== commentId)
         const updatedPost = {
             ...currentPost,
-            comments : newCommentsArray
+            comments: newCommentsArray
         }
 
 
@@ -303,9 +308,9 @@ export const deleteComment = async (req, res) => {
 
 
 
-        
+
     } catch (error) {
-        
+
         console.error(error)
         res.status(500)
     }
