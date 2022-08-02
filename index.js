@@ -31,7 +31,7 @@ app.use('/image',express.static(path.join(__dirname,'/image')))
 app.use('/avatar',express.static(path.join(__dirname,'/avatar')))
 
 
-const PORT = 5000; 
+const PORT = process.env.PORT || 5000; 
 
 
 app.use('/posts',postsRoute)
