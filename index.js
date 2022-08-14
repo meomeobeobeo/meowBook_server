@@ -5,6 +5,7 @@ import cors from 'cors'
 import postsRoute from './routes/posts.js'
 import authRouter from './routes/auth'
 import profileRoute from './routes/profile'
+import chatRouter from './routes/chat'
 import {connect} from './config/db/index'
 import path from 'path'
 import { fileURLToPath } from 'url';
@@ -29,6 +30,8 @@ app.use(cors());
 
 app.use('/image',express.static(path.join(__dirname,'/image')))
 app.use('/avatar',express.static(path.join(__dirname,'/avatar')))
+app.use('/messageImage',express.static(path.join(__dirname,'/messageImage')))
+
 
 
 const PORT = process.env.PORT || 5000; 
@@ -37,6 +40,7 @@ const PORT = process.env.PORT || 5000;
 app.use('/posts',postsRoute)
 app.use('/users',authRouter)
 app.use('/profile',profileRoute)
+app.use('/chat',chatRouter)
 app.get('/', function (req, res) {
   res.send('hello meo meo')
 })

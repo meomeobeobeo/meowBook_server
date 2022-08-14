@@ -43,7 +43,7 @@ export const changeProfileAvartar = async (req, res, next) => {
     try {
 
         const avartarFile = req.createImage
-        const hostName = `https://meow-book-server.herokuapp.com`
+        const hostName = `http://localhost:5000`
         const imgLink = `${hostName}/avatar/${avartarFile}`
 
 

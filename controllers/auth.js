@@ -7,33 +7,37 @@ export const signIn = async (req, res) => {
     const { email, password } = req.body;
     try {
         const existingUser = await Users.findOne({ email: email })
-        
-        
-        if (!existingUser) {
-          res.status(404).json({ message: "User not found." })
-          console.log('invalid email...')
-          return false
-          
-        }
-         
 
-       
+
+
+        if (!existingUser) {
+            res.status(404).json({ message: "User not found." })
+            console.log('invalid email...')
+            return false
+
+        }
+
+
+
 
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
-        
-      
+
+
         if (!isPasswordCorrect) {
-             res.status(400).json({ message: "password is incorrect." })
-             return false
-            }
+            res.status(400).json({ message: "password is incorrect." })
+            return false
+        }
         const tokenId = jwt.sign({ email: existingUser.email, id: existingUser._id }, process.env.hashPassword, { expiresIn: '1h' })
+       
+
+
         res.status(200).json({
-            user:existingUser,
+            user: {...existingUser._doc , password :'hihihihi'},
             tokenId: tokenId
         })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: error})
+        res.status(500).json({ message: error })
         res.status(500).json({ message: 'Wrong >>>>>>>>' })
     }
 
@@ -52,14 +56,15 @@ export const signUp = async (req, res) => {
 
         // hash password truoc khi luu vao database 
         const hashPassword = await bcrypt.hash(password, 12)
-        const theNewUser = await Users.create({ email: email, password: hashPassword,name: `${firstName} ${lastName}` , imgIds :[] ,listAvatarUrl : [] })
+        const theNewUser = await Users.create({ email: email, password: hashPassword, name: `${firstName} ${lastName}`, imgIds: [], listAvatarUrl: [] })
        
-       
+
+
         const tokenId = jwt.sign({ email: theNewUser.email, id: theNewUser._id }, process.env.hashPassword, { expiresIn: '1h' })
 
 
         res.status(200).json({
-            user: theNewUser,
+            user: {...theNewUser._doc , password :'hihihihi'},
             tokenId: tokenId
         })
 

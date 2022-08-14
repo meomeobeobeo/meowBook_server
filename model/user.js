@@ -22,6 +22,10 @@ const userSchema = new Schema({
         default : []
 
     },
+    listConversations : {
+        type :[String],
+        default : []
+    },
     createdAt : {
         type : Date,
         default : new Date(),
