@@ -23,6 +23,10 @@ const MessageSchema = new Schema({
         type :[String],
         default :[]
     },
+    listImgIds :{
+        type :[String],
+        default :[]
+    },
     messageId :{
         type: String,
     },

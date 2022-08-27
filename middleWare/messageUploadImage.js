@@ -40,7 +40,7 @@ export const messageUploadImage = async (req, res, next) => {
             var imageBuffer = decodedImg.data;
             var type = decodedImg.type;
             var extension = mime.getExtension(type);
-            const subName = uuidv4()
+            var subName = uuidv4()
             var fileName = `${subName}.` + extension;
         } catch (error) {
             console.error(error);
@@ -53,6 +53,7 @@ export const messageUploadImage = async (req, res, next) => {
         try {
             fs.writeFileSync("./messageImage/" + fileName, imageBuffer, 'utf8');
             listFileName.push(fileName);
+            listImgId.push(fileName)
 
         }
         catch (err) {
@@ -71,6 +72,7 @@ export const messageUploadImage = async (req, res, next) => {
 
     })
     req.listFullFileName = listFullFileName
+    req.listImgIds = listImgId
 
 
 

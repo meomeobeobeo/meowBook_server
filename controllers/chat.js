@@ -27,9 +27,10 @@ export const getConversation = async (req, res) => {
 export const createNewConversation = async (req, res) => {
     const { senderId, receiverId } = req.body
     try {
-        const conversation = await Conversations.find({ members: { $in: [req.params._id, receiverId] } })
-
-        if (!(conversation.length === 0)) {
+        const conversation = await Conversations.find({ members: [req.params._id, receiverId] })
+        const shiftConversation = await Conversations.find({ members: [ receiverId ,req.params._id] })
+      
+        if (conversation.length !==0 || shiftConversation.length !==0) {
             console.log('conversation is valid')
             res.json(conversation)
             return false
@@ -84,10 +85,11 @@ export const createMessage = async (req, res) => {
     const { conversationId } = req.params
     const newMessageData = req.body
     const listFullFileName = req.listFullFileName
-   
+    const listImgIds = req.listImgIds
+
 
     try {
-        const newMessage = new Messages({ ...newMessageData,images:listFullFileName, conversationId: conversationId })
+        const newMessage = new Messages({ ...newMessageData, images: listFullFileName, conversationId: conversationId, listImgIds: listImgIds })
         newMessage.save()
         console.log(newMessage)
         res.json(newMessage)
@@ -100,9 +102,9 @@ export const createMessage = async (req, res) => {
 }
 export const deleteMessage = async (req, res) => {
     const { messageId } = req.params
-    console.log(messageId)
+
     try {
-        await Messages.findOneAndRemove({messageId : messageId})
+        await Messages.findOneAndRemove({ messageId: messageId })
         console.log('message deleted successfully.')
         res.json({ message: "message deleted successfully." });
 

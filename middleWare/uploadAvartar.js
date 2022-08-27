@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 function decodeBase64Image(dataString) {
+    console.log(dataString)
     var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
         response = {};
 
@@ -25,6 +26,7 @@ function decodeBase64Image(dataString) {
 export const uploadAvatar = async (req, res, next) => {
     let imgId = []
     let imgB64Data = req.body.dataImg
+   
     var decodedImg = decodeBase64Image(imgB64Data);
     var imageBuffer = decodedImg.data;
     var type = decodedImg.type;
