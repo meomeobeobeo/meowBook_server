@@ -1,14 +1,24 @@
 import * as folder_Id from './googleApiFolderId'
 import fs from 'fs'
 import {google} from 'googleapis'
+import * as url from 'url';
+import path from 'path'
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
 export const uploadFileGoogleDrive = async (fileName , mimeType , folderId , subFolder  ) => {
 
+    const keyFileLink = path.join(__dirname,'/meowBookDrive.json')
+    // E:\APP_REACT\meowBook\server\image
+    const imageFile = path.join(__dirname,'')
+    console.log()
+
     try {
         const auth = new google.auth.GoogleAuth({
-            keyFile : './function/googleApi/meowBookDrive.json',
+            keyFile : keyFileLink,
             scopes :['https://www.googleapis.com/auth/drive']
         })
 
@@ -24,7 +34,7 @@ export const uploadFileGoogleDrive = async (fileName , mimeType , folderId , sub
 // server\function\googleApi\googleApi.js
         const media = {
             mimeType:`${mimeType}`,/*  @params */
-            body :fs.createReadStream(`../../meowBook/server/${subFolder}/${fileName}`)/*  @params fileName : test.jpg  */
+            body :fs.createReadStream(`././${subFolder}/${fileName}`)/*  @params fileName : test.jpg  */
         }
 
         const response = await driveServices.files.create(

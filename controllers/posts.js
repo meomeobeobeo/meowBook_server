@@ -65,7 +65,7 @@ export const createPost = async (req, res) => {
 // edit post 
 export const editPost = async (req, res) => {
     const imgCreateName = req.createImage
-    const hostName = `https://meo-book-server.herokuapp.com`
+    const hostName = `http://localhost:5000`
     const imgLink = `${hostName}/image/${imgCreateName}`
 
 

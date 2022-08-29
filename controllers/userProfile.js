@@ -41,7 +41,7 @@ export const getUserData = async (req, res) => {
 // POST /profile/changeAvartar/:userId(_id in mongodb server )
 export const changeProfileAvartar = async (req, res, next) => {
     
-    // const hostName = `https://meo-book-server.herokuapp.com`
+    // const hostName = `http://localhost:5000`
     // const imgLink = `${hostName}/avatar/${avartarFile}`
     
         const imgId = req.imgId 
