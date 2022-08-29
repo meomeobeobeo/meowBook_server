@@ -2,7 +2,8 @@
 import mime from 'mime'
 import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid';
-
+import { uploadFileGoogleDrive } from '../function/googleApi/googleApi';
+import * as folderId from '../function/googleApi/googleApiFolderId'
 
 
 
@@ -29,12 +30,14 @@ export const messageUploadImage = async (req, res, next) => {
     const { images } = req.body
     const listFileName = []
     const listImgId = []
+    const listGoogleDriveId = []
+    const listGoogleDriveLink = []
+    const sub = 'messageImage'
+
+    try {
+        for (const image of images) {
 
 
-    images.forEach(image => {
-
-
-        try {
 
             var decodedImg = decodeBase64Image(image);
             var imageBuffer = decodedImg.data;
@@ -42,37 +45,34 @@ export const messageUploadImage = async (req, res, next) => {
             var extension = mime.getExtension(type);
             var subName = uuidv4()
             var fileName = `${subName}.` + extension;
-        } catch (error) {
-            console.error(error);
-            next()
-            return false;
-
-        }
 
 
-        try {
+
+
             fs.writeFileSync("./messageImage/" + fileName, imageBuffer, 'utf8');
+            let driveId = await uploadFileGoogleDrive(fileName, type, folderId.google_Api_Folder_message, sub)
+            const googleDriveLink = `https://drive.google.com/uc?export=view&id=${driveId}`
+            listGoogleDriveId.push(driveId)
+            listGoogleDriveLink.push(googleDriveLink)
             listFileName.push(fileName);
             listImgId.push(fileName)
 
+
+
+
+
         }
-        catch (err) {
-            console.error(err)
-        }
 
+        let host = process.env.hostName
 
+        req.listGoogleDriveLink = listGoogleDriveLink
+        req.listGoogleDriveId = listGoogleDriveId
+        req.listImgIds = listImgId
 
+    } catch (error) {
+        console.error(error)
 
-
-
-    })
-    let host = process.env.hostName
-    const listFullFileName = listFileName.map((fileName) => {
-        return `${host}/messageImage/${fileName}`
-
-    })
-    req.listFullFileName = listFullFileName
-    req.listImgIds = listImgId
+    }
 
 
 

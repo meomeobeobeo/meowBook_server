@@ -84,12 +84,14 @@ export const createMessage = async (req, res) => {
 
     const { conversationId } = req.params
     const newMessageData = req.body
-    const listFullFileName = req.listFullFileName
+    const listGoogleDriveLink  = req.listGoogleDriveLink
     const listImgIds = req.listImgIds
+    const listGoogleDriveId = req.listGoogleDriveId
+   
 
 
     try {
-        const newMessage = new Messages({ ...newMessageData, images: listFullFileName, conversationId: conversationId, listImgIds: listImgIds })
+        const newMessage = new Messages({ ...newMessageData, images: listGoogleDriveLink, conversationId: conversationId, listImgIds: listImgIds , listGoogleDriveId:listGoogleDriveId})
         newMessage.save()
         console.log(newMessage)
         res.json(newMessage)

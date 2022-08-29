@@ -34,9 +34,8 @@ export const createPost = async (req, res) => {
 
     const userId = req.userId
    
-    const imgCreateName = req.createImage
-    const hostName = `https://meo-book-server.herokuapp.com`
-    const imgLink = `${hostName}/image/${imgCreateName}`
+    const googleDriveLink = req.googleDriveLink
+    const googleDriveId = req.googleDriveId
 
 
 
@@ -50,7 +49,7 @@ export const createPost = async (req, res) => {
 
 
     try {
-        const newPost = new PostMessage({ ...post, authorId: userId, selectedFile: imgLink, imgId: imgId })
+        const newPost = new PostMessage({ ...post, authorId: userId, selectedFile: googleDriveLink, imgId: imgId , googleDriveId :googleDriveId })
 
         await newPost.save();
         res.status(201).json(newPost)
@@ -66,7 +65,7 @@ export const createPost = async (req, res) => {
 // edit post 
 export const editPost = async (req, res) => {
     const imgCreateName = req.createImage
-    const hostName = `https://meo-book-server.herokuapp.com`
+    const hostName = `https://meow-book-server.herokuapp.com`
     const imgLink = `${hostName}/image/${imgCreateName}`
 
 

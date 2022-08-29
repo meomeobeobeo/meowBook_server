@@ -19,6 +19,10 @@ const MessageSchema = new Schema({
         type : [String],
         default :[]
     },
+    listGoogleDriveId : {
+        type : [String],
+        default :[]
+    },
     images :{
         type :[String],
         default :[]

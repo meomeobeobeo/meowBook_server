@@ -1,5 +1,6 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
+import { deleteFileGoogleDrive } from '../function/googleApi/googleApi';
 import Users from '../model/user'
 
 
@@ -28,25 +29,36 @@ export const deleteOldAvatar = async (req, res, next) => {
 
 
 
-       const currentUserData = (await Users.findById(req.userId))._doc
-        const {imgIds} = currentUserData
-      
+    try {
+        const currentUserData = (await Users.findById(req.userId))._doc
+        const { imgIds, googleDriveId } = currentUserData
+
 
         // check id Of image need delete 
-        const imgPaths = imgIds.map((id , index) => {
+        const imgPaths = imgIds.map((id, index) => {
             return `./avatar/${id}`
-        }) 
-      
+        })
 
-        for(let i = 0; i < imgPaths.length; i++) {
+
+        for (let i = 0; i < imgPaths.length; i++) {
             deleteImage(imgPaths[i])
-        }   
+        }
+        if (googleDriveId !== '') {
+            deleteFileGoogleDrive(googleDriveId)
+        }
+        console.warn('pass deleteOldAvatar')
+        
 
 
 
+    } catch (error) {
+        console.log('error when deleting avatar')
+        console.error(error)
+       
+
+    }
 
 
-    
 
 
 
@@ -58,4 +70,5 @@ export const deleteOldAvatar = async (req, res, next) => {
 
 
     next();
+
 }

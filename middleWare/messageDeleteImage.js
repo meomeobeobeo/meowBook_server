@@ -1,5 +1,6 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
+import { deleteFileGoogleDrive } from '../function/googleApi/googleApi';
 import Messages from '../model/Messenger/Message';
 import PostMessage from '../model/postMessage';
 
@@ -32,6 +33,8 @@ export const messageDeleteImage = async (req, res, next) => {
 
         const data = (await Messages.findOne({ messageId: messageId }))._doc
         const listImgIds = data.listImgIds
+        const listGoogleDriveId = data.listGoogleDriveId
+
        
         // check id Of image need delete 
         const imgPaths = listImgIds.map((id , index) => {
@@ -42,6 +45,10 @@ export const messageDeleteImage = async (req, res, next) => {
         for (let i = 0; i < imgPaths.length; i++) {
             deleteImage(imgPaths[i])
 
+        }
+        for (const driveId of listGoogleDriveId) {
+            deleteFileGoogleDrive(driveId)
+            
         }
 
 

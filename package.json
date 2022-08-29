@@ -5,6 +5,7 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
+    "googleapis": "^107.0.0",
     "jsonwebtoken": "^8.5.1",
     "mime": "^3.0.0",
     "mongodb": "^4.5.0",
@@ -20,7 +21,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node --inspect --experimental-specifier-resolution=node index.js"
+    "start": "nodemon --inspect --experimental-specifier-resolution=node index.js"
   },
   "author": "",
   "license": "ISC",

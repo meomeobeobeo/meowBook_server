@@ -4,7 +4,7 @@
 import Users from "../model/user";
 import PostMessage from "../model/postMessage";
 import mongoose from "mongoose";
-import {changeVIE_to_ENG} from '../function/changeVIE_to_ENG'
+import { changeVIE_to_ENG } from '../function/changeVIE_to_ENG'
 
 
 // GET profile/getUserData/:${id} (_id in mongoDb server)
@@ -40,13 +40,29 @@ export const getUserData = async (req, res) => {
 
 // POST /profile/changeAvartar/:userId(_id in mongodb server )
 export const changeProfileAvartar = async (req, res, next) => {
+    
+    // const hostName = `https://meow-book-server.herokuapp.com`
+    // const imgLink = `${hostName}/avatar/${avartarFile}`
+    
+        const imgId = req.imgId 
+        const fileName = req.fileName
+        const googleDriveLink = req.googleDriveLink 
+        const driveId = req.driveId 
+
+
+    
+    console.log(imgId)
+    console.log(fileName)
+    console.log(driveId)
+    console.log(googleDriveLink)
+
+
 
 
     try {
 
-        const avartarFile = req.createImage
-        const hostName = `https://meo-book-server.herokuapp.com`
-        const imgLink = `${hostName}/avatar/${avartarFile}`
+
+       
 
 
         if (!req.userId) {
@@ -57,13 +73,14 @@ export const changeProfileAvartar = async (req, res, next) => {
 
 
         const currentUserData = (await Users.findById(req.userId))
-        currentUserData.imgIds.push(req.imgId[0])
-        currentUserData.listAvatarUrl.push(imgLink)
+        console.log(currentUserData)
+        currentUserData.imgIds.push(imgId)
 
 
 
 
-        const newUserData = { ...currentUserData._doc, avatarUrl: imgLink }
+
+        const newUserData = { ...currentUserData._doc, avatarUrl: googleDriveLink  ,googleDriveId : driveId }
 
         const update = await Users.findByIdAndUpdate(req.userId, newUserData, { new: true })
 
@@ -83,7 +100,7 @@ export const changeProfileAvartar = async (req, res, next) => {
             let lastPost = posts[i]._doc
             let newPost = {
                 ...lastPost,
-                authorAvatarUrl: imgLink
+                authorAvatarUrl: googleDriveLink
             }
 
             let updated = await PostMessage.findByIdAndUpdate(listPostNeedChange[i], newPost, { new: true });
@@ -113,70 +130,70 @@ export const filterUser = async (req, res) => {
         let searchText = req.params.searchText.toLowerCase()
         searchText = changeVIE_to_ENG(searchText)
         console.log(searchText)
-        const userInfor = await Users.find({})    
-        
+        const userInfor = await Users.find({})
+
         const result = userInfor.map(user => {
-           
+
             return user._doc
-           
-        } )
-        const filter = result.filter(  user =>{
+
+        })
+        const filter = result.filter(user => {
             let name = changeVIE_to_ENG(user.name.toLowerCase())
-            
+
             return name.includes(searchText)
         })
 
 
         console.log(filter)
         res.json(filter)
-        
-    }   
+
+    }
     catch (error) {
-            console.error(error);
-            res.status(500).send(error);
-
-        }
-
+        console.error(error);
+        res.status(500).send(error);
 
     }
+
+
+}
 export const followUser = async (req, res) => {
-        if (!req.userId) {
-            res.status(401);// not authentication
-            return false;// not authenticated
-
-        }
-
-        const { followUserId } = req.params;
-        try {
-            const userInfor = await Users.findById(req.userId)
-
-            const index = userInfor.friendList.findIndex((id) => id === followUserId);
-            if (index === -1) {
-                // follow the user
-                userInfor.friendList.push(followUserId);
-            }
-            else {
-                // unfollow User
-                userInfor.friendList = userInfor.friendList.filter((id) => id !== String(followUserId))
-            }
-
-
-            const updated = await Users.findByIdAndUpdate(req.userId, userInfor, { new: true })
-            res.json(updated)
-
-
-
-
-
-
-        } catch (error) {
-            console.error(error)
-
-        }
-
-
-
-
-
+    if (!req.userId) {
+        res.status(401);// not authentication
+        return false;// not authenticated
 
     }
+
+    const { followUserId } = req.params;
+    try {
+        const userInfor = await Users.findById(req.userId)
+
+        const index = userInfor.friendList.findIndex((id) => id === followUserId);
+        if (index === -1) {
+            // follow the user
+            userInfor.friendList.push(followUserId);
+        }
+        else {
+            // unfollow User
+            userInfor.friendList = userInfor.friendList.filter((id) => id !== String(followUserId))
+        }
+
+
+        const updated = await Users.findByIdAndUpdate(req.userId, userInfor, { new: true })
+        res.json(updated)
+
+
+
+
+
+
+    } catch (error) {
+        console.error(error)
+
+    }
+
+
+
+
+
+
+}

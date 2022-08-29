@@ -17,11 +17,8 @@ const userSchema = new Schema({
         default : []
 
     },
-    listAvatarUrl : {
-        type :[String],
-        default : []
-
-    },
+    googleDriveId :{type: String , default:''},
+   
     listConversations : {
         type :[String],
         default : []

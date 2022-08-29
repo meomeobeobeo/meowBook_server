@@ -15,6 +15,11 @@ const postSchema = new Schema({
         type :[String],
         default : []
     },
+    googleDriveId :{
+        type :String,
+        default:''
+
+    },
     likes : {
         type :[String],
         default : []
