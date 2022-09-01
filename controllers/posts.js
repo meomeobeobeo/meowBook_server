@@ -64,9 +64,18 @@ export const createPost = async (req, res) => {
 
 // edit post 
 export const editPost = async (req, res) => {
-    const imgCreateName = req.createImage
-    const hostName = `https://meo-book-server.herokuapp.com`
-    const imgLink = `${hostName}/image/${imgCreateName}`
+    // const imgCreateName = req.createImage
+    // const hostName = `https://meo-book-server.herokuapp.com`
+    // const imgLink = `${hostName}/image/${imgCreateName}`
+    const imgId = req.imgId
+
+
+    const post = req.body;
+
+    const userId = req.userId
+   
+    const googleDriveLink = req.googleDriveLink
+    const googleDriveId = req.googleDriveId
 
 
 
@@ -78,12 +87,12 @@ export const editPost = async (req, res) => {
 
 
 
-        const { title, message, authorId, selectedFile, tags, name, authorAvatarUrl } = req.body;
+        const { title, message, authorId,  tags, name, authorAvatarUrl } = req.body;
         
 
 
 
-        const updatedPost = { authorId, title, message, tags, selectedFile: imgLink, _id, name, authorAvatarUrl, imgId: req.imgId };
+        const updatedPost = { authorId, title, message, tags, selectedFile: googleDriveLink, _id, name, authorAvatarUrl, imgId: imgId , googleDriveId :googleDriveId };
         /// check authorId is valid to update post
 
         if (authorId !== req.userId) {
