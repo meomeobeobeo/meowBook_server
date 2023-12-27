@@ -1,98 +1,74 @@
-import PostMessage from "../model/postMessage"
+import PostMessage from '../model/postMessage'
 import mongoose from 'mongoose'
-
-
-
-
-
-
-
-
-
-
 
 export const getPosts = async (req, res) => {
     try {
-        const postMessage = await PostMessage.find();
+        const postMessage = await PostMessage.find()
 
-        res.status(200).json(postMessage);
-
+        res.status(200).json(postMessage)
     } catch (error) {
-        res.status(404).json(error);
+        res.status(404).json(error)
     }
-
 }
 
-
 export const createPost = async (req, res) => {
-
-
     const imgId = req.imgId
 
-
-    const post = req.body;
+    const post = req.body
 
     const userId = req.userId
-   
+
     const googleDriveLink = req.googleDriveLink
     const googleDriveId = req.googleDriveId
 
-
-
-
-
-
-
-
-
-
-
-
     try {
-        const newPost = new PostMessage({ ...post, authorId: userId, selectedFile: googleDriveLink, imgId: imgId , googleDriveId :googleDriveId })
+        const newPost = new PostMessage({
+            ...post,
+            authorId: userId,
+            selectedFile: googleDriveLink,
+            imgId: imgId,
+            googleDriveId: googleDriveId,
+        })
 
-        await newPost.save();
+        await newPost.save()
         res.status(201).json(newPost)
     } catch (error) {
-        console.log(error);
-        res.status(400).json(error);
+        console.log(error)
+        res.status(400).json(error)
     }
 }
 
-
-
-
-// edit post 
+// edit post
 export const editPost = async (req, res) => {
     // const imgCreateName = req.createImage
     // const hostName = `https://meo-book-server.herokuapp.com`
     // const imgLink = `${hostName}/image/${imgCreateName}`
     const imgId = req.imgId
 
-
-    const post = req.body;
+    const post = req.body
 
     const userId = req.userId
-   
+
     const googleDriveLink = req.googleDriveLink
     const googleDriveId = req.googleDriveId
 
-
-
-
     if (req.params._id) {
-
         const { _id } = req.params
 
+        const { title, message, authorId, tags, name, authorAvatarUrl } = req.body
 
-
-
-        const { title, message, authorId,  tags, name, authorAvatarUrl } = req.body;
-        
-
-
-
-        const updatedPost = { authorId, title, message, tags, selectedFile: googleDriveLink, _id, name, authorAvatarUrl, imgId: imgId , googleDriveId :googleDriveId };
+        const updatedPost = {
+            authorId,
+            title,
+            message,
+            tags,
+            selectedFile: googleDriveLink,
+            _id,
+            name,
+            authorAvatarUrl,
+            imgId: imgId,
+            googleDriveId: googleDriveId,
+        }
         /// check authorId is valid to update post
 
         if (authorId !== req.userId) {
@@ -100,33 +76,23 @@ export const editPost = async (req, res) => {
             return false
         }
 
-
         try {
-            if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`);
+            if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`)
 
-
-            const updated = await PostMessage.findByIdAndUpdate(_id, updatedPost, { new: true });
-
+            const updated = await PostMessage.findByIdAndUpdate(_id, updatedPost, { new: true })
 
             res.status(200).json(updated)
-
-
-
-
         } catch (error) {
-            console.error(error);
+            console.error(error)
         }
     }
-
-
-
 }
 export const deletePost = async (req, res) => {
     if (req.params._id) {
         const { _id } = req.params
 
         try {
-        if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`);
+            if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send(`No post with id: ${_id}`)
 
             // check userId valid to delete post
             const currentPost = await PostMessage.findById(req.params._id)
@@ -134,72 +100,58 @@ export const deletePost = async (req, res) => {
             if (authorId !== req.userId) {
                 res.sendStatus(405)
                 return false
-
             }
-
 
             if (req.params._id) {
                 await PostMessage.findByIdAndRemove(req.params._id)
-                res.json({ message: "Post deleted successfully." });
+                res.json({ message: 'Post deleted successfully.' })
             }
-
-
         } catch (error) {
-            console.error(error);
-            res.status(400).json(error);
+            console.error(error)
+            res.status(400).json(error)
         }
-
-    }
-    else {
-
+    } else {
     }
 }
 export const likePost = async (req, res) => {
-
     try {
         const { _id } = req.params
         if (!req.userId) {
             res.sendStatus(404)
-            return false;
-
+            return false
         }
         if (!mongoose.Types.ObjectId.isValid(_id)) {
             res.sendStatus(404)
             return res.status(404).json('no post with id :' + _id)
-
         }
         const post = await PostMessage.findById(_id)
 
         const index = post.likes.findIndex((id) => id === req.userId)
         if (index === -1) {
             // like the post
-            post.likes.push(req.userId);
-        }
-        else {
+            post.likes.push(req.userId)
+        } else {
             // dislike the post
             post.likes = post.likes.filter((id) => id !== String(req.userId))
         }
 
         const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, { new: true })
         res.json(updatedPost)
-    }
-    catch (error) {
-        console.log(error);
+    } catch (error) {
+        console.log(error)
     }
 }
 export const addComment = async (req, res) => {
     try {
         if (!req.userId) {
             res.sendStatus(401)
-            return false;
-
+            return false
         }
         const idOfPost = req.params._id
         console.log(idOfPost)
         if (!mongoose.Types.ObjectId.isValid(idOfPost)) {
             res.sendStatus(404)
             return res.status(404).json('no post with id :' + idOfPost)
-
         }
         const commentData = req.body
         console.log(commentData)
@@ -208,18 +160,12 @@ export const addComment = async (req, res) => {
         currentPost.comments.push(commentData)
         const updated = await PostMessage.findByIdAndUpdate(idOfPost, currentPost, { new: true })
 
-
         res.json(commentData)
-
-
-
     } catch (error) {
-        console.warn(error);
+        console.warn(error)
         res.sendStatus(500)
     }
-
 }
-
 
 // patch post/:_id/:commentId
 export const editComment = async (req, res, next) => {
@@ -227,18 +173,15 @@ export const editComment = async (req, res, next) => {
 
     const newCommentData = req.body
 
-
     try {
         if (!req.userId) {
             res.sendStatus(401)
-            return false;
-
+            return false
         }
 
         if (!mongoose.Types.ObjectId.isValid(_id)) {
             res.sendStatus(404)
             return res.status(404).json('no post with id :' + idOfPost)
-
         }
 
         const currentPost = (await PostMessage.findById(_id))._doc
@@ -254,73 +197,41 @@ export const editComment = async (req, res, next) => {
         console.log(commentsArray[indexChange])
         const updatedPost = {
             ...currentPost,
-            comments: commentsArray
+            comments: commentsArray,
         }
-
-
 
         const updated = await PostMessage.findByIdAndUpdate(_id, updatedPost, { new: true })
         res.json(commentsArray[indexChange])
-
-
-
-
-
-
-
-
-
-
     } catch (error) {
         console.error(error)
-
-
     }
-
-
-
 }
 export const deleteComment = async (req, res) => {
-
     try {
         if (!req.userId) {
             res.sendStatus(401)
-            return false;
-
+            return false
         }
         const { _id, commentId } = req.params
 
         if (!mongoose.Types.ObjectId.isValid(_id)) {
             res.sendStatus(404)
             return res.status(404).json('no post with id :' + _id)
-
         }
         const currentPost = (await PostMessage.findById(_id))._doc
 
         const commentsArray = currentPost.comments
-        const newCommentsArray = commentsArray.filter(comment => comment.commentId !== commentId)
+        const newCommentsArray = commentsArray.filter((comment) => comment.commentId !== commentId)
         const updatedPost = {
             ...currentPost,
-            comments: newCommentsArray
+            comments: newCommentsArray,
         }
-
-
 
         const updated = await PostMessage.findByIdAndUpdate(_id, updatedPost, { new: true })
 
-
         res.json('delete comment success')
-
-
-
-
-
-
-
     } catch (error) {
-
         console.error(error)
         res.status(500)
     }
-
 }

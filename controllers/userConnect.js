@@ -1,5 +1,5 @@
-import Users from "../model/user";
-import mongoose from "mongoose";
+import Users from '../model/user'
+import mongoose from 'mongoose'
 
 /// POST user/friend/:userId
 export const addFriend = async (req, res, next) => {
@@ -7,7 +7,7 @@ export const addFriend = async (req, res, next) => {
         const userIdNewFriend = req.body.userId
         if (!req.userId) {
             res.sendStatus(401)
-            return false;
+            return false
         }
         const currentUserInfor = await Users.findById(req.userId)
         console.log(currentUserInfor)
@@ -15,16 +15,12 @@ export const addFriend = async (req, res, next) => {
         if (index === -1) {
             // add friend
             currentUserInfor.friendList.push(userIdNewFriend)
-        }
-        else {
-            // unFriend 
-            currentUserInfor.friendList = currentUserInfor.friendList.filter(friendId => friendId !== userIdNewFriend)
+        } else {
+            // unFriend
+            currentUserInfor.friendList = currentUserInfor.friendList.filter((friendId) => friendId !== userIdNewFriend)
         }
     } catch (error) {
         console.log(error)
         res.sendStatus(500)
-
     }
-
-
 }

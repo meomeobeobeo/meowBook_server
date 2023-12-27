@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+import mongoose from 'mongoose'
+const { Schema } = mongoose
 
 const storiesSchema = new Schema({
     bgColor: {
         type: String,
-        default: 'salmon'
+        default: 'salmon',
     },
     title: {
         type: String,
@@ -20,13 +20,9 @@ const storiesSchema = new Schema({
     createdAt: {
         type: Date,
         default: new Date(),
-    }
-
-
-
+    },
 })
 
-const Stories = mongoose.model('stories',storiesSchema)
+const Stories = mongoose.model('stories', storiesSchema)
 
-
-export default Users;
+export default Users

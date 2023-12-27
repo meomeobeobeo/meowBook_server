@@ -1,19 +1,17 @@
-import mongoose from "mongoose";
-const {Schema} = mongoose;
+import mongoose from 'mongoose'
+const { Schema } = mongoose
 
 const ConversationSchema = new Schema({
     members: {
-        type : [String],
-        default : []
+        type: [String],
+        default: [],
     },
-    createdAt : {
-        type : Date,
-        default : new Date(),
-    }
-
+    createdAt: {
+        type: Date,
+        default: new Date(),
+    },
 })
 
-const Conversations = mongoose.model('conversation',ConversationSchema)
+const Conversations = mongoose.model('conversation', ConversationSchema)
 
-
-export default Conversations;
+export default Conversations

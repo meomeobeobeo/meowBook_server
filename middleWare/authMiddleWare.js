@@ -1,13 +1,11 @@
 import jwt, { decode } from 'jsonwebtoken'
 
-
-
 const authMiddleWare = async (req, res, next) => {
     try {
         const tokenId = req.headers.authorization.split(' ')[1]
         if (!tokenId) {
-            res.sendStatus(401).send('Not authenticated');
-            return false;
+            res.sendStatus(401).send('Not authenticated')
+            return false
         }
         const isCustomAuth = tokenId.length < 500
         let verifyData = jwt.verify(tokenId, process.env.hashPassword)
@@ -28,10 +26,8 @@ const authMiddleWare = async (req, res, next) => {
         //     decodedData = jwt.decode(tokenId);
         //     req.userId = decodedData?.id;
 
-        // } 
+        // }
         next()
-
-
     } catch (error) {
         console.log(error)
         res.sendStatus(401)
