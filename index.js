@@ -34,8 +34,11 @@ app.use('/users', authRouter)
 app.use('/profile', profileRoute)
 app.use('/chat', chatRouter)
 app.get('/', function (req, res) {
-    res.send('hello meo meo')
+    res.json({
+        statusCode : 200,
+        message : "hello this is meobook server"
+    })
 })
 
 app.listen(PORT)
-console.log('listening on port :http://localhost:5000/')
+console.log(`istening on port :http://localhost:${PORT}`)
